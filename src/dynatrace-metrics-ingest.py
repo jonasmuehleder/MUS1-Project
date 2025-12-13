@@ -76,16 +76,17 @@ def on_message(client, userdata, msg):
 
         # 2. Iterate over the JSON keys and map them
         for key, value in data.items():
-            # We skip 'time' because we are using ingest time
-            if key == "time": 
-                continue
-            
             if key in METRIC_MAP:
                 metric_key = METRIC_MAP[key]
-                line = f"{metric_key} {value}"
+                
+                # Math Logic: Divide by 1000 for everything except status codes
+                if key == "1.128.0":
+                    final_value = value
+                else:
+                    final_value = float(value) / 1000.0
+                
+                line = f"{metric_key} {final_value}"
                 dt_payload_lines.append(line)
-            else:
-                pass
 
         # 3. Send to Dynatrace
         if dt_payload_lines:
