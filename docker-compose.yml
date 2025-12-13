@@ -29,5 +29,19 @@ services:
       - MQTT_TOPIC=${MQTT_TOPIC}
     networks:
       - mqtt_net
+
+  oneagent:
+    image: dynatrace/oneagent:latest
+    container_name: dynatrace-oneagent
+    restart: unless-stopped
+    privileged: true                  
+    network_mode: host              
+    pid: host                         
+    volumes:
+      - /:/mnt/root          
+    environment:
+      - ONEAGENT_INSTALLER_SCRIPT_URL=${DT_ONEAGENT_URL}
+      - ONEAGENT_INSTALLER_SKIP_CERT_CHECK=false
+  
 networks:
   mqtt_net: {}
