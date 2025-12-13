@@ -14,7 +14,7 @@ DT_METRICS_INGEST_ENDPOINT = f"https://{TENANT_HOST}/api/v2/metrics/ingest"
 
 # MQTT Configuration from environment variables
 MQTT_BROKER = os.getenv("MQTT_BROKER")
-MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
+MQTT_PORT = int(os.getenv("MQTT_PORT"))
 MQTT_USER = os.getenv("MQTT_USER")
 MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
 MQTT_CLIENT_ID = os.getenv("MQTT_CLIENT_ID")
