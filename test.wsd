@@ -1,0 +1,157 @@
+@startuml
+package "org.junit.runners" { }
+package "org.junit.experimental.theories" { }
+package "org.junit.experimental" { }
+package "org.junit.internal.runners.rules" { }
+package "org.junit.internal.requests" { }
+package "org.junit.experimental.results" { }
+package "org.junit.internal.runners.model" { }
+package "org.junit.internal.builders" { }
+package "org.junit.experimental.categories" { }
+package "org.junit.experimental.theories.internal" { }
+package "org.junit.function" { }
+package "org.junit.runners.parameterized" { }
+package "org.junit.internal.runners.statements" { }
+package "org.junit.experimental.max" { }
+package "org.junit.runner.notification" { }
+package "org.junit.experimental.theories.suppliers" { }
+package "org.junit.matchers" { }
+package "org.junit.runner.manipulation" { }
+package "org.junit.internal.management" { }
+package "org.junit.internal.matchers" { }
+package "org.junit.experimental.runners" { }
+package "org.junit.rules" { }
+package "org.junit.runners.model" { }
+package "org.junit.internal" { }
+package "org.junit.runner" { }
+package "org.junit" { }
+package "org.junit.validator" { }
+package "junit.framework" { }
+package "org.junit.internal.runners" { }
+
+"org.junit.runners" --> "org.junit.runners.model"
+"org.junit.runners" --> "org.junit.runner.notification"
+"org.junit.runners" --> "org.junit.rules"
+"org.junit.runners" --> "org.junit.runner"
+"org.junit.runners" --> "org.junit.internal.runners.statements"
+"org.junit.runners" --> "org.junit.internal.runners.rules"
+"org.junit.runners" --> "org.junit.internal.runners.model"
+"org.junit.runners" --> "org.junit.runner.manipulation"
+"org.junit.runners" --> "org.junit.internal"
+"org.junit.runners" --> "org.junit"
+"org.junit.runners" --> "org.junit.validator"
+"org.junit.runners" --> "org.junit.runners.parameterized"
+"org.junit.runners" --> "org.junit.internal.builders"
+"org.junit.runners" --> "org.junit.internal.runners"
+"org.junit.experimental.theories" --> "org.junit.runners.model"
+"org.junit.experimental.theories" --> "org.junit.internal"
+"org.junit.experimental.theories" --> "org.junit"
+"org.junit.experimental.theories" --> "org.junit.experimental.theories.internal"
+"org.junit.experimental.theories" --> "org.junit.runners"
+"org.junit.experimental" --> "org.junit.runners.model"
+"org.junit.experimental" --> "org.junit.runners"
+"org.junit.experimental" --> "org.junit.runner"
+"org.junit.internal.runners.rules" --> "org.junit.runners.model"
+"org.junit.internal.runners.rules" --> "org.junit"
+"org.junit.internal.runners.rules" --> "org.junit.rules"
+"org.junit.internal.requests" --> "org.junit.runner"
+"org.junit.internal.requests" --> "org.junit.internal.builders"
+"org.junit.internal.requests" --> "org.junit.runners.model"
+"org.junit.internal.requests" --> "org.junit.internal.runners"
+"org.junit.internal.requests" --> "org.junit.runner.manipulation"
+"org.junit.experimental.results" --> "org.junit.runner.notification"
+"org.junit.experimental.results" --> "org.junit.runner"
+"org.junit.experimental.results" --> "org.junit.internal"
+"org.junit.internal.runners.model" --> "org.junit.runners.model"
+"org.junit.internal.runners.model" --> "org.junit.runner.notification"
+"org.junit.internal.runners.model" --> "org.junit.internal"
+"org.junit.internal.runners.model" --> "org.junit.runner"
+"org.junit.internal.builders" --> "org.junit.runners.model"
+"org.junit.internal.builders" --> "org.junit.runner"
+"org.junit.internal.builders" --> "org.junit.internal.runners"
+"org.junit.internal.builders" --> "org.junit"
+"org.junit.internal.builders" --> "org.junit.runners"
+"org.junit.internal.builders" --> "junit.framework"
+"org.junit.internal.builders" --> "org.junit.runner.notification"
+"org.junit.experimental.categories" --> "org.junit.runner"
+"org.junit.experimental.categories" --> "org.junit.runner.manipulation"
+"org.junit.experimental.categories" --> "org.junit.runners.model"
+"org.junit.experimental.categories" --> "org.junit.validator"
+"org.junit.experimental.categories" --> "org.junit"
+"org.junit.experimental.categories" --> "org.junit.runners"
+"org.junit.experimental.categories" --> "org.junit.internal"
+"org.junit.experimental.theories.internal" --> "org.junit.runners.model"
+"org.junit.experimental.theories.internal" --> "org.junit.experimental.theories"
+"org.junit.experimental.theories.internal" --> "org.junit"
+"org.junit.runners.parameterized" --> "org.junit.runners.model"
+"org.junit.runners.parameterized" --> "org.junit.runner"
+"org.junit.runners.parameterized" --> "org.junit.internal.runners.statements"
+"org.junit.runners.parameterized" --> "org.junit.internal"
+"org.junit.runners.parameterized" --> "org.junit.runners"
+"org.junit.runners.parameterized" --> "org.junit.runner.notification"
+"org.junit.internal.runners.statements" --> "org.junit.runners.model"
+"org.junit.internal.runners.statements" --> "org.junit.internal.management"
+"org.junit.internal.runners.statements" --> "org.junit.internal"
+"org.junit.experimental.max" --> "org.junit.runners"
+"org.junit.experimental.max" --> "org.junit.internal.requests"
+"org.junit.experimental.max" --> "org.junit.runner"
+"org.junit.experimental.max" --> "org.junit.internal.runners"
+"org.junit.experimental.max" --> "junit.framework"
+"org.junit.experimental.max" --> "org.junit.runner.notification"
+"org.junit.experimental.max" --> "org.junit.runners.model"
+"org.junit.runner.notification" --> "org.junit.internal"
+"org.junit.runner.notification" --> "org.junit.runner"
+"org.junit.experimental.theories.suppliers" --> "org.junit.experimental.theories"
+"org.junit.matchers" --> "org.junit.internal.matchers"
+"org.junit.runner.manipulation" --> "org.junit.runner"
+"org.junit.internal.management" --> "org.junit.internal"
+"org.junit.internal.matchers" --> "org.junit.internal"
+"org.junit.experimental.runners" --> "org.junit.runners"
+"org.junit.experimental.runners" --> "org.junit.runners.model"
+"org.junit.rules" --> "org.junit.runner"
+"org.junit.rules" --> "org.junit"
+"org.junit.rules" --> "org.junit.internal.runners.statements"
+"org.junit.rules" --> "org.junit.runners.model"
+"org.junit.rules" --> "org.junit.internal"
+"org.junit.rules" --> "org.junit.internal.management"
+"org.junit.rules" --> "org.junit.function"
+"org.junit.rules" --> "org.junit.matchers"
+"org.junit.rules" --> "org.junit.internal.matchers"
+"org.junit.runners.model" --> "org.junit.internal"
+"org.junit.runners.model" --> "org.junit.internal.runners.model"
+"org.junit.runners.model" --> "org.junit.runner"
+"org.junit.runners.model" --> "org.junit.internal.runners"
+"org.junit.runners.model" --> "org.junit.runner.manipulation"
+"org.junit.runners.model" --> "org.junit"
+"org.junit.internal" --> "org.junit.runners"
+"org.junit.internal" --> "org.junit"
+"org.junit.internal" --> "org.junit.runner.notification"
+"org.junit.internal" --> "org.junit.runner"
+"org.junit.runner" --> "org.junit.runner.manipulation"
+"org.junit.runner" --> "org.junit.runner.notification"
+"org.junit.runner" --> "org.junit.internal"
+"org.junit.runner" --> "junit.framework"
+"org.junit.runner" --> "org.junit.internal.runners"
+"org.junit.runner" --> "org.junit.runners.model"
+"org.junit.runner" --> "org.junit.validator"
+"org.junit.runner" --> "org.junit"
+"org.junit.runner" --> "org.junit.runners"
+"org.junit.runner" --> "org.junit.internal.builders"
+"org.junit.runner" --> "org.junit.internal.requests"
+"org.junit" --> "org.junit.internal"
+"org.junit" --> "org.junit.function"
+"org.junit" --> "org.junit.runners"
+"org.junit.validator" --> "org.junit.runners.model"
+"junit.framework" --> "org.junit.runner.notification"
+"junit.framework" --> "org.junit.runner"
+"junit.framework" --> "org.junit.internal"
+"junit.framework" --> "org.junit"
+"junit.framework" --> "org.junit.runner.manipulation"
+"org.junit.internal.runners" --> "org.junit"
+"org.junit.internal.runners" --> "org.junit.runners.model"
+"org.junit.internal.runners" --> "org.junit.runner.notification"
+"org.junit.internal.runners" --> "org.junit.runner"
+"org.junit.internal.runners" --> "org.junit.runner.manipulation"
+"org.junit.internal.runners" --> "org.junit.internal"
+"org.junit.internal.runners" --> "junit.framework"
+@enduml
