@@ -210,10 +210,10 @@ Die Kernfunktionalität (MQTT → Dynatrace-Metrikeinspeisung) funktioniert auf 
    ```
 
 ## Verwendete Technologien und nützliche Dokumentation
-[Dynatrace Metrics Ingest](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/environment-api/metric-v2/post-ingest-metrics)
-[Dynatrace Dashboards](https://docs.dynatrace.com/docs/analyze-explore-automate/dashboards-and-notebooks/dashboards-new)
-[Dynatrace Oneagent](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent)
-[Dynatrace DQL](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-query-language)
-[Smartmeter Auslesung des NetzOÖ Smartmeters](https://github.com/mgerhard74/amis_smartmeter_reader)
-[Oneagent for Linux](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/installation-and-operation/linux/installation/install-oneagent-on-linux)
+[Dynatrace Metrics Ingest](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/environment-api/metric-v2/post-ingest-metrics)  
+[Dynatrace Dashboards](https://docs.dynatrace.com/docs/analyze-explore-automate/dashboards-and-notebooks/dashboards-new)  
+[Dynatrace Oneagent](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent)  
+[Dynatrace DQL](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-query-language)  
+[Smartmeter Auslesung des NetzOÖ Smartmeters](https://github.com/mgerhard74/amis_smartmeter_reader)  
+[Oneagent for Linux](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/installation-and-operation/linux/installation/install-oneagent-on-linux)  
 
