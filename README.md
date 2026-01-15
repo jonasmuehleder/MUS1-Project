@@ -1,47 +1,89 @@
-# MUS1-Project
+# Smartmeter Visualiserung und Notifiziereung mit Dynatrace
 
-A smart meter data ingestion service that bridges MQTT messaging with Dynatrace monitoring. This application subscribes to smart meter readings via MQTT and forwards the metrics to Dynatrace for visualization and analysis.
+## Problemstatement
+Da wir zuhause seit einigen Jahren eine PV anlage haben und auch seit über einem Jahr ein Elektorauto mit einer einfachen Wallbox, welche nicht intelligent ist, ist es derzeit nur schwierig herauszufinden ob das Laden es Elektroautos gerade am effizientesten ist oder nicht. Weiteres haben wir keine Information darüber ob es gerade sinvoll ist z.B. eine Waschmaschine oder einen Elektroherd einzuschalten. Dies wäre zwar theoretisch möglich, dabei müsste man aber andauernd in der App des Wechselrichters schauen. In unserem fall ein Wechselrichter der Firma `ZCS Azzurro`.
 
-## Core Functionality
+## Lösungsansatz
+Die Daten der PV-Anlage werden mittels RS485-Konverter ausgelesen und an den Rasperry Pi übertragen. 
+Parallel dazu werden die Daten des `Netz-Smart-Meters (Netz OÖ)` mit einem `AMIS-Lesekopf (Infrarotsensor)` erfasst und ebenfalls über `MQTT` an den Raspberry Pi übertragen. Der Raspberry Pi verarbeitet die eingehenden Daten, formatiert sie und übermittelt sie als Custom Metrics in eine Dynatrace-Umgebung. Dort werden sie über `Dashboards` visualisiert und mithilfe der `Dynatrace Query Language (DQL)` analysiert. Anschließend wird ein Altering mit der `Dynatrace Anomaly Detection` umgesetz. Weiteres wird das umgesetze Projekt welches auf einem Rasperry Pi in einem Docker Container läuft vom `Dynatrace Oneagent` gemonitort.
 
-This application provides a data pipeline for smart meter telemetry:
+## Ergebnisse
+### Darstellung von Einspeisung/Netzbezug über einen gewissen Zeitraum
+![Dynatrace Dashboards](docs/dashboard.png)
 
-1. **MQTT Subscription**: Connects to an MQTT broker and subscribes to smart meter data topics
-2. **Data Transformation**: Parses incoming JSON messages and maps OBIS codes to meaningful metric names
-3. **Dynatrace Ingestion**: Sends processed metrics to Dynatrace via the Metrics Ingest API v2
+### Monitoring der Dockercontainer mittels Dynatrace One Agent
+**Note:** Mittels Rasperry PI 3 nicht möglich, da die Architektur dieses Pi´s nicht vom Oneagent unterstützt wird. Monitoring wurde also nur Beispielhaft mit Docker Desktop umgesetzt um die mögliche verwendung darzustellen.
 
-### Supported Metrics
+#### Overview
+![Overview](docs/overview.png)
+#### Processes
+![Processes](/docs/procceses.png)
+#### Hosts
+![Hosts](/docs/hosts.png)
 
-| OBIS Code | Metric Name | Description |
-|-----------|-------------|-------------|
-| 1.8.0 | `smartmeter.energy.active.import.total` | Total active energy imported (kWh) |
-| 2.8.0 | `smartmeter.energy.active.export.total` | Total active energy exported (kWh) |
-| 3.8.1 | `smartmeter.energy.reactive.import.total` | Total reactive energy imported (kvarh) |
-| 4.8.1 | `smartmeter.energy.reactive.export.total` | Total reactive energy exported (kvarh) |
-| 1.7.0 | `smartmeter.power.active.import` | Current active power import (kW) |
-| 2.7.0 | `smartmeter.power.active.export` | Current active power export (kW) |
-| 3.7.0 | `smartmeter.power.reactive.import` | Current reactive power import (kvar) |
-| 4.7.0 | `smartmeter.power.reactive.export` | Current reactive power export (kvar) |
-| saldo | `smartmeter.power.active.saldo` | Net active power (kW) |
-| 1.128.0 | `smartmeter.inkasso` | Billing/collection status |
+
+## Projektstruktur
+```
+MUS1-Project/
+├── docker-compose.yml          # Container-Orchestrierung
+├── Dockerfile                  # Python-Anwendungscontainer
+├── README.md                   # Dokumentaion
+├── .env                        # Umgebungsvariablen
+├── mosquitto/
+│   ├── config/
+│   │   ├── mosquitto.conf      # MQTT-Broker-Konfiguration
+│   │   └── passwd              # MQTT-Benutzeranmeldedaten
+│   ├── data/                   # Persistente MQTT-Daten
+│   └── log/                    # MQTT-Broker-Protokolle
+└── docs/ # Sources for documentation
+└── src/
+    └── dynatrace-metrics-ingest.py  # Hauptanwendung
+```
+
+
+**TODO** Notifizierung!
+
+
+## Kernfunktionalität
+
+Diese Anwendung stellt eine Datenpipeline für Smart-Meter-Telemetrie bereit:
+
+1. **MQTT-Abonnement**: Verbindet sich mit einem MQTT-Broker und abonniert Smart-Meter-Daten-Topics
+2. **Datentransformation**: Parst eingehende JSON-Nachrichten und ordnet OBIS-Codes aussagekräftigen Metriknamen zu
+3. **Dynatrace-Einspeisung**: Sendet verarbeitete Metriken über die `Metrics Ingest API v2` an Dynatrace
+
+### Unterstützte Metriken
+
+| OBIS-Code | Metrikname | Beschreibung |
+|-----------|------------|--------------|
+| 1.8.0 | `smartmeter.energy.active.import.total` | Gesamte importierte Wirkenergie (kWh) |
+| 2.8.0 | `smartmeter.energy.active.export.total` | Gesamte exportierte Wirkenergie (kWh) |
+| 3.8.1 | `smartmeter.energy.reactive.import.total` | Gesamte importierte Blindenergie (kvarh) |
+| 4.8.1 | `smartmeter.energy.reactive.export.total` | Gesamte exportierte Blindenergie (kvarh) |
+| 1.7.0 | `smartmeter.power.active.import` | Aktuelle Wirkleistungsaufnahme (kW) |
+| 2.7.0 | `smartmeter.power.active.export` | Aktuelle Wirkleistungsabgabe (kW) |
+| 3.7.0 | `smartmeter.power.reactive.import` | Aktuelle Blindleistungsaufnahme (kvar) |
+| 4.7.0 | `smartmeter.power.reactive.export` | Aktuelle Blindleistungsabgabe (kvar) |
+| saldo | `smartmeter.power.active.saldo` | Netto-Wirkleistung (kW) |
+| 1.128.0 | `smartmeter.inkasso` | Abrechnungs-/Inkassostatus |
 
 ---
 
-## Technologies Used
+## Verwendete Technologien
 
-| Technology | Purpose |
-|------------|---------|
-| **Python 3.11** | Core application runtime |
-| **paho-mqtt** | MQTT client library for broker communication |
-| **requests** | HTTP client for Dynatrace API calls |
-| **python-dotenv** | Environment variable management |
-| **Docker** | Containerization |
-| **Docker Compose** | Multi-container orchestration |
-| **Eclipse Mosquitto** | MQTT message broker |
+| Technologie | Zweck |
+|-------------|-------|
+| **Python 3.11** | Kern-Laufzeitumgebung der Anwendung |
+| **paho-mqtt** | MQTT-Client-Bibliothek für Broker-Kommunikation |
+| **requests** | HTTP-Client für Dynatrace-API-Aufrufe |
+| **python-dotenv** | Verwaltung von Umgebungsvariablen |
+| **Docker** | Containerisierung |
+| **Docker Compose** | Multi-Container-Orchestrierung |
+| **Eclipse Mosquitto** | MQTT-Message-Broker |
 
 ---
 
-## Architecture
+## Architektur
 
 ```
 ┌─────────────────┐      MQTT       ┌───────────────────┐      HTTP/REST      ┌─────────────┐
@@ -49,7 +91,7 @@ This application provides a data pipeline for smart meter telemetry:
 │   (Publisher)   │                 │    (Port 1883)    │                     │   Tenant    │
 └─────────────────┘                 └─────────┬─────────┘                     └──────▲──────┘
                                               │                                      │
-                                              │ Subscribe                            │
+                                              │ Abonnieren                           │
                                               ▼                                      │
                                     ┌─────────────────────┐                          │
                                     │  Metric Ingest App  │ ─────────────────────────┘
@@ -59,84 +101,84 @@ This application provides a data pipeline for smart meter telemetry:
 
 ---
 
-## Dynatrace Integration
+## Dynatrace-Integration
 
 ### Metrics Ingest API
 
-The application uses the **Dynatrace Metrics Ingest API v2** (`/api/v2/metrics/ingest`) to push smart meter metrics directly to your Dynatrace environment.
+Die Anwendung verwendet die **Dynatrace Metrics Ingest API v2** (`/api/v2/metrics/ingest`), um Smart-Meter-Metriken direkt in Ihre Dynatrace-Umgebung zu übertragen.
 
-**Required API Token Permissions:**
-- `metrics.ingest` - Ingest metrics
+**Erforderliche API-Token-Berechtigungen:**
+- `metrics.ingest` - Metriken einspeisen
 
-### Configuration
+### Konfiguration
 
-The following environment variables must be configured for Dynatrace:
+Die folgenden Umgebungsvariablen müssen für Dynatrace konfiguriert werden:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `TENANT_HOST` | Your Dynatrace tenant URL (without https://) | `abc12345.live.dynatrace.com` |
-| `API_TOKEN` | API token with `metrics.ingest` scope | `dt0c01.XXX...` |
+| Variable | Beschreibung | Beispiel |
+|----------|--------------|----------|
+| `TENANT_HOST` | Ihre Dynatrace-Tenant-URL (ohne https://) | `abc12345.live.dynatrace.com` |
+| `API_TOKEN` | API-Token mit `metrics.ingest`-Berechtigung | `dt0c01.XXX...` |
 
 ---
 
-## MQTT Configuration
+## MQTT-Konfiguration
 
-The application connects to an Eclipse Mosquitto MQTT broker for receiving smart meter data.
+Die Anwendung verbindet sich mit einem Eclipse Mosquitto MQTT-Broker zum Empfang von Smart-Meter-Daten.
 
-### Environment Variables
+### Umgebungsvariablen
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `MQTT_BROKER` | MQTT broker hostname | `mosquitto` (container name) |
-| `MQTT_PORT` | MQTT broker port | `1883` |
-| `MQTT_USER` | MQTT username | - |
-| `MQTT_PASSWORD` | MQTT password | - |
-| `MQTT_CLIENT_ID` | Unique client identifier | - |
-| `MQTT_TOPIC` | Topic to subscribe to | - |
+| Variable | Beschreibung | Standard |
+|----------|--------------|----------|
+| `MQTT_BROKER` | MQTT-Broker-Hostname | `mosquitto` (Container-Name) |
+| `MQTT_PORT` | MQTT-Broker-Port | `1883` |
+| `MQTT_USER` | MQTT-Benutzername | - |
+| `MQTT_PASSWORD` | MQTT-Passwort | - |
+| `MQTT_CLIENT_ID` | Eindeutige Client-Kennung | - |
+| `MQTT_TOPIC` | Zu abonnierendes Topic | - |
 
 ---
 
 ## Dynatrace OneAgent
 
-The `docker-compose.yml` includes a Dynatrace OneAgent container for full-stack monitoring.
+Die `docker-compose.yml` enthält einen Dynatrace OneAgent-Container für Full-Stack-Monitoring.
 
-### Configuration
+### Konfiguration
 
-| Variable | Description |
-|----------|-------------|
-| `DT_ONEAGENT_URL` | OneAgent installer script URL from your Dynatrace environment |
+| Variable | Beschreibung |
+|----------|--------------|
+| `DT_ONEAGENT_URL` | OneAgent-Installer-Skript-URL aus Ihrer Dynatrace-Umgebung |
 
-### OneAgent Container Settings
+### OneAgent-Container-Einstellungen
 
-The OneAgent runs with:
-- **Privileged mode**: Required for full system access
-- **Host network mode**: For monitoring host-level metrics
-- **Host PID namespace**: For process visibility
-- **Root filesystem mount**: For complete host monitoring
+Der OneAgent läuft mit:
+- **Privilegierter Modus**: Erforderlich für vollen Systemzugriff
+- **Host-Netzwerkmodus**: Für die Überwachung von Host-Level-Metriken
+- **Host-PID-Namespace**: Für Prozesssichtbarkeit
+- **Root-Dateisystem-Mount**: Für vollständige Host-Überwachung
 
 ---
 
-## ⚠️ Raspberry Pi 3 Limitation
+## ⚠️ Raspberry Pi 3 Einschränkung
 
-> **Important:** The Dynatrace OneAgent container **will NOT work on Raspberry Pi 3** devices.
+> **Wichtig:** Der Dynatrace OneAgent-Container **funktioniert NICHT auf Raspberry Pi 3**-Geräten.
 
-### Reason
+### Grund
 
-The Raspberry Pi 3 uses an **ARMv7 (32-bit)** architecture, which is **not supported** by Dynatrace OneAgent. OneAgent requires:
-- **x86_64 (AMD64)** architecture, or
-- **ARM64 (AArch64)** architecture (Raspberry Pi 4 and newer)
+Der Raspberry Pi 3 verwendet eine **ARMv7 (32-Bit)**-Architektur, die von Dynatrace OneAgent **nicht unterstützt** wird. OneAgent erfordert:
+- **x86_64 (AMD64)**-Architektur, oder
+- **ARM64 (AArch64)**-Architektur (Raspberry Pi 4 und neuer)
 
-### Workaround for Raspberry Pi 3
+### Workaround für Raspberry Pi 3
 
-When deploying on Raspberry Pi 3:
+Bei der Bereitstellung auf Raspberry Pi 3:
 
-1. **Remove or comment out the OneAgent service** from `docker-compose.yml`
-2. **Rely on the Metrics Ingest API** for sending data to Dynatrace (this works regardless of architecture)
+1. **Entfernen oder kommentieren Sie den OneAgent-Dienst** in `docker-compose.yml` aus
+2. **Verlassen Sie sich auf die Metrics Ingest API** zum Senden von Daten an Dynatrace (dies funktioniert unabhängig von der Architektur)
 
-The core functionality (MQTT → Dynatrace metrics ingestion) will work on Raspberry Pi 3, only the OneAgent-based host monitoring is unavailable.
+Die Kernfunktionalität (MQTT → Dynatrace-Metrikeinspeisung) funktioniert auf Raspberry Pi 3, nur das OneAgent-basierte Host-Monitoring ist nicht verfügbar.
 
 ```yaml
-# Comment out or remove the oneagent service for Raspberry Pi 3
+# Kommentieren Sie den oneagent-Dienst für Raspberry Pi 3 aus oder entfernen Sie ihn
 # oneagent:
 #   image: dynatrace/oneagent:latest
 #   ...
@@ -144,23 +186,23 @@ The core functionality (MQTT → Dynatrace metrics ingestion) will work on Raspb
 
 ---
 
-## Deployment
+## Bereitstellung
 
-### Prerequisites
+### Voraussetzungen
 
-1. Docker and Docker Compose installed
-2. A Dynatrace environment with API access
-3. An API token with `metrics.ingest` permission
+1. Docker und Docker Compose installiert
+2. Eine Dynatrace-Umgebung mit API-Zugang
+3. Ein API-Token mit `metrics.ingest`-Berechtigung
 
-### Setup
+### Einrichtung
 
-1. **Clone the repository**
+1. **Repository klonen**
    ```bash
    git clone <repository-url>
    cd MUS1-Project
    ```
 
-2. **Create a `.env` file** in the project root:
+2. **Erstellen Sie eine `.env`-Datei** im Projektstammverzeichnis:
    ```env
    # Dynatrace
    TENANT_HOST=your-tenant.live.dynatrace.com
@@ -175,38 +217,31 @@ The core functionality (MQTT → Dynatrace metrics ingestion) will work on Raspb
    MQTT_TOPIC=smartmeter/data
    ```
 
-3. **Start the services**
+3. **Dienste starten**
    ```bash
    docker-compose up -d
    ```
 
-4. **For Raspberry Pi 3**, use a modified compose command:
+4. **Für Raspberry Pi 3** verwenden Sie einen modifizierten Compose-Befehl:
    ```bash
    docker-compose up -d mosquitto smartmeter-metric-ingest
    ```
 
 ---
 
-## Project Structure
+## Projektstruktur
 
-```
-MUS1-Project/
-├── docker-compose.yml          # Container orchestration
-├── Dockerfile                  # Python application container
-├── README.md                   # This documentation
-├── .env                        # Environment variables (create this)
-├── mosquitto/
-│   ├── config/
-│   │   ├── mosquitto.conf      # MQTT broker configuration
-│   │   └── passwd              # MQTT user credentials
-│   ├── data/                   # Persistent MQTT data
-│   └── log/                    # MQTT broker logs
-└── src/
-    └── dynatrace-metrics-ingest.py  # Main application
-```
+
 
 ---
 
-## License
-
-[Add your license here]
+## Verwendete Technologien und nützliche Dokumentation
+[Dynatrace Metrics Ingest](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/environment-api/metric-v2/post-ingest-metrics)
+[Dynatrace Dashboards](https://docs.dynatrace.com/docs/analyze-explore-automate/dashboards-and-notebooks/dashboards-new)
+[Dynatrace Oneagent](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent)
+[Dynatrace DQL](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-query-language)
+[Smartmeter Auslesung des NetzOÖ Smartmeters](https://github.com/mgerhard74/amis_smartmeter_reader)
+[]()
+[]()
+[]()
+[]()
