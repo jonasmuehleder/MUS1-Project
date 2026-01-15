@@ -16,11 +16,30 @@ Parallel dazu werden die Daten des `Netz-Smart-Meters (Netz OÖ)` mit einem `AMI
 
 #### Overview
 ![Overview](docs/overview.png)
+#### Importierte Metriken
+| OBIS-Code | Metrikname | Beschreibung |
+|-----------|------------|--------------|
+| 1.8.0 | `smartmeter.energy.active.import.total` | Gesamte importierte Wirkenergie (kWh) |
+| 2.8.0 | `smartmeter.energy.active.export.total` | Gesamte exportierte Wirkenergie (kWh) |
+| 3.8.1 | `smartmeter.energy.reactive.import.total` | Gesamte importierte Blindenergie (kvarh) |
+| 4.8.1 | `smartmeter.energy.reactive.export.total` | Gesamte exportierte Blindenergie (kvarh) |
+| 1.7.0 | `smartmeter.power.active.import` | Aktuelle Wirkleistungsaufnahme (kW) |
+| 2.7.0 | `smartmeter.power.active.export` | Aktuelle Wirkleistungsabgabe (kW) |
+| 3.7.0 | `smartmeter.power.reactive.import` | Aktuelle Blindleistungsaufnahme (kvar) |
+| 4.7.0 | `smartmeter.power.reactive.export` | Aktuelle Blindleistungsabgabe (kvar) |
+| saldo | `smartmeter.power.active.saldo` | Netto-Wirkleistung (kW) |
+| 1.128.0 | `smartmeter.inkasso` | Abrechnungs-/Inkassostatus |
+
+![Imported Metrics](/docs/metrics.png)
+
 #### Processes
-![Processes](/docs/procceses.png)
+![Processes](/docs/processes.png)
 #### Hosts
 ![Hosts](/docs/hosts.png)
+#### Alamierung falls Host nicht mehr erreichbar ist oder Probleme hat
+![Problem](/docs/problem.png)
 
+**TODO** Notifizierung!
 
 ## Projektstruktur
 ```
@@ -40,66 +59,37 @@ MUS1-Project/
     └── dynatrace-metrics-ingest.py  # Hauptanwendung
 ```
 
+## Implementierung
 
-**TODO** Notifizierung!
-
-
-## Kernfunktionalität
-
-Diese Anwendung stellt eine Datenpipeline für Smart-Meter-Telemetrie bereit:
-
-1. **MQTT-Abonnement**: Verbindet sich mit einem MQTT-Broker und abonniert Smart-Meter-Daten-Topics
-2. **Datentransformation**: Parst eingehende JSON-Nachrichten und ordnet OBIS-Codes aussagekräftigen Metriknamen zu
-3. **Dynatrace-Einspeisung**: Sendet verarbeitete Metriken über die `Metrics Ingest API v2` an Dynatrace
-
-### Unterstützte Metriken
-
-| OBIS-Code | Metrikname | Beschreibung |
-|-----------|------------|--------------|
-| 1.8.0 | `smartmeter.energy.active.import.total` | Gesamte importierte Wirkenergie (kWh) |
-| 2.8.0 | `smartmeter.energy.active.export.total` | Gesamte exportierte Wirkenergie (kWh) |
-| 3.8.1 | `smartmeter.energy.reactive.import.total` | Gesamte importierte Blindenergie (kvarh) |
-| 4.8.1 | `smartmeter.energy.reactive.export.total` | Gesamte exportierte Blindenergie (kvarh) |
-| 1.7.0 | `smartmeter.power.active.import` | Aktuelle Wirkleistungsaufnahme (kW) |
-| 2.7.0 | `smartmeter.power.active.export` | Aktuelle Wirkleistungsabgabe (kW) |
-| 3.7.0 | `smartmeter.power.reactive.import` | Aktuelle Blindleistungsaufnahme (kvar) |
-| 4.7.0 | `smartmeter.power.reactive.export` | Aktuelle Blindleistungsabgabe (kvar) |
-| saldo | `smartmeter.power.active.saldo` | Netto-Wirkleistung (kW) |
-| 1.128.0 | `smartmeter.inkasso` | Abrechnungs-/Inkassostatus |
-
----
-
-## Verwendete Technologien
+### Verwendete Technologien
 
 | Technologie | Zweck |
 |-------------|-------|
-| **Python 3.11** | Kern-Laufzeitumgebung der Anwendung |
-| **paho-mqtt** | MQTT-Client-Bibliothek für Broker-Kommunikation |
-| **requests** | HTTP-Client für Dynatrace-API-Aufrufe |
-| **python-dotenv** | Verwaltung von Umgebungsvariablen |
+| **Python** | Implementierung des Python Clients |
+| **MQTT** | Kommunikation zwischen Sensor und Python Client |
 | **Docker** | Containerisierung |
 | **Docker Compose** | Multi-Container-Orchestrierung |
-| **Eclipse Mosquitto** | MQTT-Message-Broker |
-
----
+| **Rasperry PI 3** | Ausführung der Docker Container |
+| **AMIS Smartreader** | Auslesen der Smartmeterdaten |
+| **Dynatrace Platform** | Auswertungen, Notifizierung, Monitoring |
 
 ## Architektur
 
 ```
-┌─────────────────┐      MQTT       ┌───────────────────┐      HTTP/REST      ┌─────────────┐
-│   Smart Meter   │ ──────────────► │  Mosquitto Broker │ ◄───────────────── │  Dynatrace  │
-│   (Publisher)   │                 │    (Port 1883)    │                     │   Tenant    │
-└─────────────────┘                 └─────────┬─────────┘                     └──────▲──────┘
-                                              │                                      │
-                                              │ Abonnieren                           │
-                                              ▼                                      │
-                                    ┌─────────────────────┐                          │
-                                    │  Metric Ingest App  │ ─────────────────────────┘
-                                    │  (Python Container) │   Metrics Ingest API v2
-                                    └─────────────────────┘
+┌─────────────────────┐      MQTT       ┌───────────────────┐      HTTP/REST      ┌─────────────┐
+│   Smart Meter Reader│ ──────────────► │  Mosquitto Broker │  ◄───────────────── │  Dynatrace  │
+│   (Publisher)       │                 │    (Port 1883)    │                     │   Tenant    │
+└─────────────────────┘                 └─────────┬─────────┘                     └──────▲──────┘
+                                                  │                                      │
+                                                  │ Abonnieren                           │
+                                                  ▼                                      │
+                                        ┌─────────────────────┐                          │
+                                        │  Metric Ingest App  │ ─────────────────────────┘
+                                        │  (Python Container) │   Metrics Ingest API v2
+                                        └─────────────────────┘
 ```
 
----
+
 
 ## Dynatrace-Integration
 
@@ -177,22 +167,14 @@ Bei der Bereitstellung auf Raspberry Pi 3:
 
 Die Kernfunktionalität (MQTT → Dynatrace-Metrikeinspeisung) funktioniert auf Raspberry Pi 3, nur das OneAgent-basierte Host-Monitoring ist nicht verfügbar.
 
-```yaml
-# Kommentieren Sie den oneagent-Dienst für Raspberry Pi 3 aus oder entfernen Sie ihn
-# oneagent:
-#   image: dynatrace/oneagent:latest
-#   ...
-```
-
----
-
-## Bereitstellung
+## Bereitstellung und starten der Applikation
 
 ### Voraussetzungen
 
 1. Docker und Docker Compose installiert
-2. Eine Dynatrace-Umgebung mit API-Zugang
-3. Ein API-Token mit `metrics.ingest`-Berechtigung
+2. Eine Dynatrace-Umgebung mit API-Zugang ist vorhanden
+3. Ein API-Token mit `metrics.ingest`-Berechtigung ist vorhanden
+4. Smartmetersensor mit ESP32 und Rasperry Pi befinden sich im selben LAN
 
 ### Einrichtung
 
@@ -217,7 +199,7 @@ Die Kernfunktionalität (MQTT → Dynatrace-Metrikeinspeisung) funktioniert auf 
    MQTT_TOPIC=smartmeter/data
    ```
 
-3. **Dienste starten**
+3. **Starten der Container auf Windows**
    ```bash
    docker-compose up -d
    ```
@@ -227,21 +209,11 @@ Die Kernfunktionalität (MQTT → Dynatrace-Metrikeinspeisung) funktioniert auf 
    docker-compose up -d mosquitto smartmeter-metric-ingest
    ```
 
----
-
-## Projektstruktur
-
-
-
----
-
 ## Verwendete Technologien und nützliche Dokumentation
 [Dynatrace Metrics Ingest](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/environment-api/metric-v2/post-ingest-metrics)
 [Dynatrace Dashboards](https://docs.dynatrace.com/docs/analyze-explore-automate/dashboards-and-notebooks/dashboards-new)
 [Dynatrace Oneagent](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent)
 [Dynatrace DQL](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-query-language)
 [Smartmeter Auslesung des NetzOÖ Smartmeters](https://github.com/mgerhard74/amis_smartmeter_reader)
-[]()
-[]()
-[]()
-[]()
+[Oneagent for Linux](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/installation-and-operation/linux/installation/install-oneagent-on-linux)
+
