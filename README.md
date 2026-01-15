@@ -93,6 +93,8 @@ MUS1-Project/
                                         │  (Python Container) │   Metrics Ingest API v2
                                         └─────────────────────┘
 ```
+## Einrichtung des Smartmeter Sensors
+Information und Dokumentation über das aufsetzen des Smartmeter Sensors und das senden der Daten über einen MQTT broker können [hier](https://github.com/mgerhard74/amis_smartmeter_reader) gefunden werden.
 
 ## Client Implememtierung
 ```python
