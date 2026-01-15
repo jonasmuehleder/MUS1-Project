@@ -343,6 +343,12 @@ Die Kernfunktionalität (MQTT → Dynatrace-Metrikeinspeisung) funktioniert auf 
    docker-compose up -d mosquitto smartmeter-metric-ingest
    ```
 
+## Einrichten der Notifizierung
+Aufgrund dessen, das gerade Winter ist und die PV nicht ständig genug Strom genertiert, haben wir noch keine sinvolle Threshold einstellung der Produktion gefunden.
+![notiffizierun1](/docs/image.png)
+![notiffizierun12](/docs/image-1.png)
+### Beispiel Altert
+![beispiel Alter](/docs/image-2.png)
 ## Verwendete Technologien und nützliche Dokumentation
 [Dynatrace Metrics Ingest](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/environment-api/metric-v2/post-ingest-metrics)  
 [Dynatrace Dashboards](https://docs.dynatrace.com/docs/analyze-explore-automate/dashboards-and-notebooks/dashboards-new)  
