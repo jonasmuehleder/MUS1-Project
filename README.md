@@ -88,8 +88,8 @@ MUS1-Project/
 ## Architektur
 
 ```
-┌─────────────────────┐      MQTT       ┌───────────────────┐      HTTP/REST      ┌─────────────┐
-│   Smart Meter Reader│ ──────────────► │  Mosquitto Broker │  ◄───────────────── │  Dynatrace  │
+┌─────────────────────┐      MQTT       ┌───────────────────┐                     ┌─────────────┐
+│   Smart Meter Reader│ ──────────────► │  Mosquitto Broker │                     │  Dynatrace  │
 │   (Publisher)       │                 │    (Port 1883)    │                     │   Tenant    │
 └─────────────────────┘                 └─────────┬─────────┘                     └──────▲──────┘
                                                   │                                      │
