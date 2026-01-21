@@ -22,36 +22,36 @@ Parallel dazu werden die Daten des `Netz-Smart-Meters (Netz OÖ)` mit einem `AMI
 #### Overview
 ![Overview](docs/overview.png)
 #### Importierte Metriken
-| OBIS-Code | Metrikname | Beschreibung |
-|-----------|------------|--------------|
-| 1.8.0 | `smartmeter.energy.active.import.total` | Gesamte importierte Wirkenergie (kWh) |
-| 2.8.0 | `smartmeter.energy.active.export.total` | Gesamte exportierte Wirkenergie (kWh) |
-| 3.8.1 | `smartmeter.energy.reactive.import.total` | Gesamte importierte Blindenergie (kvarh) |
-| 4.8.1 | `smartmeter.energy.reactive.export.total` | Gesamte exportierte Blindenergie (kvarh) |
-| 1.7.0 | `smartmeter.power.active.import` | Aktuelle Wirkleistungsaufnahme (kW) |
-| 2.7.0 | `smartmeter.power.active.export` | Aktuelle Wirkleistungsabgabe (kW) |
-| 3.7.0 | `smartmeter.power.reactive.import` | Aktuelle Blindleistungsaufnahme (kvar) |
-| 4.7.0 | `smartmeter.power.reactive.export` | Aktuelle Blindleistungsabgabe (kvar) |
-| saldo | `smartmeter.power.active.saldo` | Netto-Wirkleistung (kW) |
-| 1.128.0 | `smartmeter.inkasso` | Abrechnungs-/Inkassostatus |
+| OBIS-Code | Metrikname                                | Beschreibung                             |
+| --------- | ----------------------------------------- | ---------------------------------------- |
+| 1.8.0     | `smartmeter.energy.active.import.total`   | Gesamte importierte Wirkenergie (kWh)    |
+| 2.8.0     | `smartmeter.energy.active.export.total`   | Gesamte exportierte Wirkenergie (kWh)    |
+| 3.8.1     | `smartmeter.energy.reactive.import.total` | Gesamte importierte Blindenergie (kvarh) |
+| 4.8.1     | `smartmeter.energy.reactive.export.total` | Gesamte exportierte Blindenergie (kvarh) |
+| 1.7.0     | `smartmeter.power.active.import`          | Aktuelle Wirkleistungsaufnahme (kW)      |
+| 2.7.0     | `smartmeter.power.active.export`          | Aktuelle Wirkleistungsabgabe (kW)        |
+| 3.7.0     | `smartmeter.power.reactive.import`        | Aktuelle Blindleistungsaufnahme (kvar)   |
+| 4.7.0     | `smartmeter.power.reactive.export`        | Aktuelle Blindleistungsabgabe (kvar)     |
+| saldo     | `smartmeter.power.active.saldo`           | Netto-Wirkleistung (kW)                  |
+| 1.128.0   | `smartmeter.inkasso`                      | Abrechnungs-/Inkassostatus               |
 
-![Imported Metrics](/docs/metrics.png)
+![Imported Metrics](docs/metrics.png)
 
 #### Processes
-![Processes](/docs/processes.png)
+![Processes](docs/processes.png)
 #### Hosts
-![Hosts](/docs/hosts.png)
+![Hosts](docs/hosts.png)
 #### Alamierung falls Host nicht mehr erreichbar ist oder Probleme hat
-![Problem](/docs/problem.png)
+![Problem](docs/problem.png)
 
 Um eine Benarichtigung zu senden, falls ein Problem ausgelöst wird, können sogenannte Workflows erstellt werde. In unserem Fall, haben wir einen Workflow definiert welcher uns eine Email Benachrichtigung sendet, nachdem ein vordefinerter "Davis Problem Trigger" ausgeführt wurde.
 
-![Workflow](/docs/workflow.jpeg)
+![Workflow](docs/workflow.jpeg)
 
 Wird nun erneut ein eine Alarmierung über ein Problem ausgelöst wird der Workflow ausgeführt und eine Emailbenachrichtigung gesendet.
 
-![workflow-prob](/docs/prob-workflow.jpeg)
-![Email](/docs/mail.jpeg)
+![workflow-prob](docs/prob-workflow.jpeg)
+![Email](docs/mail.jpeg)
 
 ## Projektstruktur
 ```
@@ -75,15 +75,15 @@ MUS1-Project/
 
 ### Verwendete Technologien
 
-| Technologie | Zweck |
-|-------------|-------|
-| **Python** | Implementierung des Python Clients |
-| **MQTT** | Kommunikation zwischen Sensor und Python Client |
-| **Docker** | Containerisierung |
-| **Docker Compose** | Multi-Container-Orchestrierung |
-| **Rasperry PI 3** | Ausführung der Docker Container |
-| **AMIS Smartreader** | Auslesen der Smartmeterdaten |
-| **Dynatrace Platform** | Auswertungen, Notifizierung, Monitoring |
+| Technologie            | Zweck                                           |
+| ---------------------- | ----------------------------------------------- |
+| **Python**             | Implementierung des Python Clients              |
+| **MQTT**               | Kommunikation zwischen Sensor und Python Client |
+| **Docker**             | Containerisierung                               |
+| **Docker Compose**     | Multi-Container-Orchestrierung                  |
+| **Rasperry PI 3**      | Ausführung der Docker Container                 |
+| **AMIS Smartreader**   | Auslesen der Smartmeterdaten                    |
+| **Dynatrace Platform** | Auswertungen, Notifizierung, Monitoring         |
 
 ## Architektur
 
@@ -245,10 +245,10 @@ Die Anwendung verwendet die **Dynatrace Metrics Ingest API v2** (`/api/v2/metric
 
 Die folgenden Umgebungsvariablen müssen für Dynatrace konfiguriert werden:
 
-| Variable | Beschreibung | Beispiel |
-|----------|--------------|----------|
-| `TENANT_HOST` | Ihre Dynatrace-Tenant-URL (ohne https://) | `abc12345.live.dynatrace.com` |
-| `API_TOKEN` | API-Token mit `metrics.ingest`-Berechtigung | `dt0c01.XXX...` |
+| Variable      | Beschreibung                                | Beispiel                      |
+| ------------- | ------------------------------------------- | ----------------------------- |
+| `TENANT_HOST` | Ihre Dynatrace-Tenant-URL (ohne https://)   | `abc12345.live.dynatrace.com` |
+| `API_TOKEN`   | API-Token mit `metrics.ingest`-Berechtigung | `dt0c01.XXX...`               |
 
 ---
 
@@ -258,14 +258,14 @@ Die Anwendung verbindet sich mit einem Eclipse Mosquitto MQTT-Broker zum Empfang
 
 ### Umgebungsvariablen
 
-| Variable | Beschreibung | Standard |
-|----------|--------------|----------|
-| `MQTT_BROKER` | MQTT-Broker-Hostname | `mosquitto` (Container-Name) |
-| `MQTT_PORT` | MQTT-Broker-Port | `1883` |
-| `MQTT_USER` | MQTT-Benutzername | - |
-| `MQTT_PASSWORD` | MQTT-Passwort | - |
-| `MQTT_CLIENT_ID` | Eindeutige Client-Kennung | - |
-| `MQTT_TOPIC` | Zu abonnierendes Topic | - |
+| Variable         | Beschreibung              | Standard                     |
+| ---------------- | ------------------------- | ---------------------------- |
+| `MQTT_BROKER`    | MQTT-Broker-Hostname      | `mosquitto` (Container-Name) |
+| `MQTT_PORT`      | MQTT-Broker-Port          | `1883`                       |
+| `MQTT_USER`      | MQTT-Benutzername         | -                            |
+| `MQTT_PASSWORD`  | MQTT-Passwort             | -                            |
+| `MQTT_CLIENT_ID` | Eindeutige Client-Kennung | -                            |
+| `MQTT_TOPIC`     | Zu abonnierendes Topic    | -                            |
 
 ---
 
@@ -275,8 +275,8 @@ Die `docker-compose.yml` enthält einen Dynatrace OneAgent-Container für Full-S
 
 ### Konfiguration
 
-| Variable | Beschreibung |
-|----------|--------------|
+| Variable          | Beschreibung                                               |
+| ----------------- | ---------------------------------------------------------- |
 | `DT_ONEAGENT_URL` | OneAgent-Installer-Skript-URL aus Ihrer Dynatrace-Umgebung |
 
 ### OneAgent-Container-Einstellungen
@@ -352,10 +352,10 @@ Die Kernfunktionalität (MQTT → Dynatrace-Metrikeinspeisung) funktioniert auf 
 
 ## Einrichten der Notifizierung
 Aufgrund dessen, das gerade Winter ist und die PV nicht ständig genug Strom genertiert, haben wir noch keine sinvolle Threshold einstellung der Produktion gefunden.
-![notiffizierun1](/docs/image.png)
-![notiffizierun12](/docs/image-1.png)
+![notiffizierun1](docs/image.png)
+![notiffizierun12](docs/image-1.png)
 ### Beispiel Altert
-![beispiel Alter](/docs/image-2.png)
+![beispiel Alter](docs/image-2.png)
 ## Verwendete Technologien und nützliche Dokumentation
 [Dynatrace Metrics Ingest](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/environment-api/metric-v2/post-ingest-metrics)  
 [Dynatrace Dashboards](https://docs.dynatrace.com/docs/analyze-explore-automate/dashboards-and-notebooks/dashboards-new)  
