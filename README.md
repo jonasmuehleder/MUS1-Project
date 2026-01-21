@@ -44,7 +44,14 @@ Parallel dazu werden die Daten des `Netz-Smart-Meters (Netz OÖ)` mit einem `AMI
 #### Alamierung falls Host nicht mehr erreichbar ist oder Probleme hat
 ![Problem](/docs/problem.png)
 
-**TODO** Notifizierung!
+Um eine Benarichtigung zu senden, falls ein Problem ausgelöst wird, können sogenannte Workflows erstellt werde. In unserem Fall, haben wir einen Workflow definiert welcher uns eine Email Benachrichtigung sendet, nachdem ein vordefinerter "Davis Problem Trigger" ausgeführt wurde.
+
+![Workflow](/docs/workflow.jpeg)
+
+Wird nun erneut ein eine Alarmierung über ein Problem ausgelöst wird der Workflow ausgeführt und eine Emailbenachrichtigung gesendet.
+
+![workflow-prob](/docs/prob-workflow.jpeg)
+![Email](/docs/mail.jpeg)
 
 ## Projektstruktur
 ```
