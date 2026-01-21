@@ -103,6 +103,34 @@ MUS1-Project/
 ## Einrichtung des Smartmeter Sensors
 Information und Dokumentation über das aufsetzen des Smartmeter Sensors und das senden der Daten über einen MQTT broker können [hier](https://github.com/mgerhard74/amis_smartmeter_reader) gefunden werden.
 
+### Sensor
+![alt text](docs/senso.png)
+Foto von: [mgerhard74](https://github.com/mgerhard74/amis_smartmeter_reader)
+
+### Ausschnitt der Sensor Konfigurationsdatei
+```json
+{
+  "wifi": {
+    "ssid": "Muehleder",
+    "wifipassword": "{password}",
+    "dhcp": false,
+    "ip_static": "10.0.0.230",
+    "ip_netmask": "255.255.255.0",
+    "ip_gateway": "10.0.0.1",
+    "ip_nameserver": "10.0.0.1"
+  },
+  "mqtt": {
+    "mqtt_enabled": true,
+    "mqtt_broker": "10.0.0.240",
+    "mqtt_port": "1883",
+    "mqtt_user": "flojoni",
+    "mqtt_password": "{password}",
+    "mqtt_clientid": "smartmeter-reader",
+    "mqtt_topic": "amis/data"
+  }
+}
+```
+
 ## Client Implememtierung
 ```python
 import paho.mqtt.client as mqtt
@@ -230,6 +258,23 @@ except Exception as e:
     print(f"Error: {e}")
 finally:
     client.loop_stop()
+```
+
+### Environment File
+
+```txt
+# Dynatrace Config
+TENANT_HOST=....dynatracelabs.com
+API_TOKEN=dt0c01......
+#
+#DT_ONEAGENT_URL={oneagent-url-token}
+# MQTT Config
+MQTT_BROKER=localhost
+MQTT_PORT=1883
+MQTT_USER=flojoni
+MQTT_PASSWORD=my_secret_password
+MQTT_CLIENT_ID=dynatrace-amis-ingest-worker
+MQTT_TOPIC=amis/data
 ```
 
 ## Dynatrace-Integration
