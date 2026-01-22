@@ -88,15 +88,15 @@ MUS1-Project/
 ## Architektur
 
 ```
-┌─────────────────────┐      MQTT       ┌───────────────────┐                     ┌─────────────┐
-│   Smart Meter Reader│ ──────────────► │  Mosquitto Broker │                     │  Dynatrace  │
-│   (Publisher)       │                 │    (Port 1883)    │                     │   Tenant    │
-└─────────────────────┘                 └─────────┬─────────┘                     └──────▲──────┘
-                                                  │                                      │
-                                                  │ Abonnieren                           │
-                                                  ▼                                      │
-                                        ┌─────────────────────┐                          │
-                                        │  Metric Ingest App  │ ─────────────────────────┘
+┌─────────────────────┐      MQTT       ┌───────────────────┐              ┌─────────────┐            ┌─────────────┐
+│   Smart Meter Reader│ ──────────────► │  Mosquitto Broker │              │   OneAgent  │            │  Dynatrace  │
+│   (Publisher)       │                 │    (Port 1883)    │              │             │            │   Tenant    │
+└─────────────────────┘                 └─────────┬─────────┘              └─────────────┘            └──────▲──────┘
+                                                  │                                                          │
+                                                  │ Abonnieren                                               │
+                                                  ▼                                                          │
+                                        ┌─────────────────────┐                                              │
+                                        │  Metric Ingest App  │ ─────────────────────────────────────────────┘
                                         │  (Python Container) │   Metrics Ingest API v2
                                         └─────────────────────┘
 ```
